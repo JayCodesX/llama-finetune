@@ -17,7 +17,11 @@ from pathlib import Path
 
 # ── Config ───────────────────────────────────────────────────────────────────
 
-BASE_MODEL = "unsloth/Llama-3.3-70B-Instruct-bnb-4bit"
+MODEL_SIZE = os.environ.get("MODEL", "8b")
+BASE_MODEL = (
+    "unsloth/Llama-3.3-70B-Instruct-bnb-4bit" if MODEL_SIZE == "70b"
+    else "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit"
+)
 ADAPTER_PATH = os.environ.get("ADAPTER_PATH", "/workspace/output/final-adapter")
 MAX_SEQ_LENGTH = 2048
 MAX_NEW_TOKENS = 512

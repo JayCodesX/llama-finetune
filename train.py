@@ -1,8 +1,9 @@
 """
-train.py — QLoRA fine-tune Llama 3.3 70B with unsloth.
+train.py — QLoRA fine-tune with unsloth.
 
 Run on Vast.ai (RTX 3090/4090, 24GB VRAM):
-  python train.py
+  python train.py                          # default: Llama 3.1 8B
+  MODEL=70b python train.py                # Llama 3.3 70B (needs 2xA100)
 
 Expects: /workspace/dataset.jsonl (from prepare_dataset.py)
 Output:  /workspace/output/final-adapter/
@@ -14,7 +15,11 @@ from pathlib import Path
 
 # ── Config (tweak these) ────────────────────────────────────────────────────
 
-MODEL_NAME = "unsloth/Llama-3.3-70B-Instruct-bnb-4bit"
+MODEL_SIZE = os.environ.get("MODEL", "8b")
+MODEL_NAME = (
+    "unsloth/Llama-3.3-70B-Instruct-bnb-4bit" if MODEL_SIZE == "70b"
+    else "unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit"
+)
 MAX_SEQ_LENGTH = 2048       # reduce to 1024 if you get OOM
 LORA_R = 16                 # rank — 16 is good balance of quality/speed
 LORA_ALPHA = 32             # typically 2x rank
